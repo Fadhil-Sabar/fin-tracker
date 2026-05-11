@@ -8,11 +8,11 @@
 	let { children } = $props();
 
 	const store = createStore();
-	const {
-		snackbar,
-		dismissSnackbar,
-		loadTransactions
-	} = store;
+
+	// Reactive binding for snackbar
+	const snackbar = $derived(store.snackbar);
+	const dismissSnackbar = store.dismissSnackbar;
+	const loadTransactions = store.loadTransactions;
 
 	let path = $state('/');
 	let headerTitle = $derived.by(() => {

@@ -4,13 +4,14 @@
 	import FilterBar from '$lib/components/FilterBar.svelte';
 
 	const store = createStore();
-	const {
-		filteredTransactions,
-		allCategories,
-		filters,
-		setFilter,
-		resetFilters
-	} = store;
+
+	// Reactive bindings via $derived
+	const filteredTransactions = $derived(store.filteredTransactions);
+	const allCategories = $derived(store.allCategories);
+	// filters is a $state object — reference tetap sama, mutations tracked
+	const filters = store.filters;
+	const setFilter = store.setFilter;
+	const resetFilters = store.resetFilters;
 </script>
 
 <div class="transactions-page">

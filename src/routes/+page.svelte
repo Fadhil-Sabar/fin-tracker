@@ -8,15 +8,15 @@
 	import { formatCurrencyShort, formatDate } from '$lib/utils';
 
 	const store = createStore();
-	const {
-		loading,
-		error,
-		dashboardSummary,
-		categoryBreakdown,
-		monthlyTrend,
-		filteredTransactions,
-		loadTransactions
-	} = store;
+
+	// Reactive bindings via $derived — menjaga reactivitas dari module-level $state
+	const loading = $derived(store.loading);
+	const error = $derived(store.error);
+	const summary = $derived(store.dashboardSummary);
+	const categories = $derived(store.categoryBreakdown);
+	const trend = $derived(store.monthlyTrend);
+	const recentTxns = $derived(store.filteredTransactions.slice(0, 10));
+	const loadTransactions = store.loadTransactions;
 
 	let initialLoading = $state(true);
 
@@ -31,11 +31,6 @@
 		});
 		return () => unsub();
 	});
-
-	const summary = $derived(dashboardSummary);
-	const categories = $derived(categoryBreakdown);
-	const trend = $derived(monthlyTrend);
-	const recentTxns = $derived(filteredTransactions.slice(0, 10));
 </script>
 
 {#if initialLoading}

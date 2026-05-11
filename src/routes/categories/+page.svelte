@@ -3,14 +3,13 @@
 	import { formatCurrency, getMonthName } from '$lib/utils';
 
 	const store = createStore();
-	const {
-		categoryBreakdown,
-		filters,
-		setFilter,
-		loading
-	} = store;
 
-	const categories = $derived(categoryBreakdown);
+	// Reactive bindings via $derived
+	const loading = $derived(store.loading);
+	const categories = $derived(store.categoryBreakdown);
+	const filters = store.filters;
+	const setFilter = store.setFilter;
+
 	const totalExpense = $derived(categories.reduce((s, c) => s + c.total, 0));
 
 	const now = new Date();
