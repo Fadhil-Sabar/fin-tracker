@@ -1,0 +1,11 @@
+node_modules/
+.svelte-kit/
+.env
+.env.local
+google_token.json
+*.pem
+*.key
+dist/
+build/
+.DS_Store
+*.log

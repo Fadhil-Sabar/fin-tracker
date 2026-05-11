@@ -1,0 +1,11 @@
+# FinTrack — Cloudflare Pages configuration
+# https://developers.cloudflare.com/pages/
+
+name = "fin-tracker-fadhil"
+compatibility_date = "2026-05-11"
+compatibility_flags = ["nodejs_compat"]
+
+pages_build_output_dir = ".svelte-kit/cloudflare"
+
+[env.production]
+vars = { SHEET_NAME = "Sample" }
