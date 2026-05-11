@@ -52,6 +52,11 @@
   --md-shape-medium: 12px;
   --md-shape-large: 16px;
   --md-shape-full: 9999px;
+
+  /* Animation timing */
+  --anim-fast: 150ms;
+  --anim-normal: 300ms;
+  --anim-slow: 500ms;
 }
 
 /* ═══════════════════════════════════════════
@@ -61,6 +66,10 @@
 body {
   font-family: "DM Sans", sans-serif;
   background-color: var(--md-surface-dim);
+  background-image:
+    radial-gradient(ellipse at 2% 2%, rgba(26, 115, 232, 0.05) 0%, transparent 55%),
+    radial-gradient(ellipse at 98% 98%, rgba(8, 145, 163, 0.04) 0%, transparent 55%);
+  background-attachment: fixed;
   color: var(--md-on-surface);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -79,7 +88,7 @@ body {
   background: var(--md-surface);
   border-radius: var(--md-shape-medium);
   box-shadow: var(--md-elevation-1);
-  transition: box-shadow 0.2s ease;
+  transition: box-shadow var(--anim-normal) ease, transform var(--anim-normal) ease;
 }
 
 .md-card:hover {
@@ -90,57 +99,103 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 6px 12px;
+  padding: 6px 14px;
   border-radius: var(--md-shape-full);
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all var(--anim-fast) cubic-bezier(0.2, 0, 0, 1);
   border: 1px solid var(--md-outline);
   background: var(--md-surface);
   color: var(--md-on-surface-variant);
+  transform: scale(1);
+  user-select: none;
 }
 
 .md-chip:hover {
   background: var(--md-surface-container);
+  transform: scale(1.03);
+}
+
+.md-chip:active {
+  transform: scale(0.97);
 }
 
 .md-chip.active {
   background: var(--md-primary-container);
   border-color: var(--md-primary);
   color: var(--md-on-primary-container);
+  box-shadow: 0 1px 4px rgba(26, 115, 232, 0.25);
+  transform: scale(1);
 }
 
 .md-skeleton {
-  background: linear-gradient(90deg, var(--md-surface-container) 25%, var(--md-surface-container-high) 50%, var(--md-surface-container) 75%);
+  background: linear-gradient(
+    90deg,
+    var(--md-surface-container) 25%,
+    var(--md-surface-container-high) 50%,
+    var(--md-surface-container) 75%
+  );
   background-size: 200% 100%;
-  animation: shimmer 1.5s ease-in-out infinite;
+  animation: shimmer 1.6s ease-in-out infinite;
   border-radius: var(--md-shape-small);
 }
 
 @keyframes shimmer {
-  0% { background-position: 200% 0; }
+  0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
 
+/* Snackbar — slide up with progress indicator */
 .md-snackbar {
   position: fixed;
-  bottom: 24px;
+  bottom: 80px;
   left: 50%;
   transform: translateX(-50%);
-  background: #323232;
-  color: white;
-  padding: 12px 24px;
-  border-radius: var(--md-shape-small);
+  background: #2d2d2d;
+  color: #fff;
+  padding: 14px 24px 17px;
+  border-radius: var(--md-shape-medium);
   font-size: 0.875rem;
+  font-weight: 500;
   z-index: 1000;
   box-shadow: var(--md-elevation-3);
-  animation: snackbar-in 0.3s ease;
+  animation: snackbar-in var(--anim-normal) cubic-bezier(0.2, 0, 0, 1);
+  min-width: 240px;
+  max-width: 480px;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: left;
+  border: none;
+}
+
+.md-snackbar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.28);
+  animation: snackbar-progress 4000ms linear forwards;
+  border-radius: 0 0 var(--md-shape-medium) var(--md-shape-medium);
+}
+
+@keyframes snackbar-progress {
+  from { width: 100%; }
+  to   { width: 0%; }
 }
 
 @keyframes snackbar-in {
-  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* On desktop, snackbar sits above the fold */
+@media (min-width: 768px) {
+  .md-snackbar {
+    bottom: 24px;
+  }
 }
 
 /* SvelteKit hashed asset classes */
@@ -148,9 +203,13 @@ body {
   /* placeholder for potential overrides */
 }
 
-/* Scrollbar styling */
+/* ═══════════════════════════════════════════
+   Scrollbar
+   ═══════════════════════════════════════════ */
+
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -159,7 +218,7 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: var(--md-outline);
-  border-radius: 3px;
+  border-radius: var(--md-shape-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {

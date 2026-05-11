@@ -8,9 +8,9 @@
 	} = $props();
 
 	const typeOptions = [
-		{ value: 'all', label: 'Semua' },
+		{ value: 'all',     label: 'Semua' },
 		{ value: 'expense', label: 'Pengeluaran' },
-		{ value: 'income', label: 'Pemasukan' }
+		{ value: 'income',  label: 'Pemasukan' }
 	];
 </script>
 
@@ -61,20 +61,23 @@
 	.filter-bar {
 		display: flex;
 		flex-direction: column;
-		gap: 12px;
+		gap: 14px;
 	}
+
 	.filter-group {
 		display: flex;
 		flex-direction: column;
-		gap: 6px;
+		gap: 8px;
 	}
+
 	.filter-label {
-		font-size: 0.75rem;
-		font-weight: 600;
+		font-size: 0.6875rem;
+		font-weight: 700;
 		color: var(--md-on-surface-variant);
 		text-transform: uppercase;
-		letter-spacing: 0.05em;
+		letter-spacing: 0.07em;
 	}
+
 	.chip-row {
 		display: flex;
 		flex-wrap: wrap;

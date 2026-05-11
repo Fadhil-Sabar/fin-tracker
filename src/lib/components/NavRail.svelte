@@ -24,9 +24,11 @@
 <!-- Desktop: Navigation Rail -->
 <nav class="nav-rail" aria-label="Navigasi utama">
 	<div class="nav-brand">
-		<svg width="28" height="28" viewBox="0 0 24 24" fill="#1A73E8">
-			<path d="M19.83 7.5l-2.27-2.27c.07-.42.18-.81.32-1.15.23-.56.56-1.06.97-1.5-.7-.37-1.5-.58-2.35-.58-1.64 0-3.09.79-4 2h-5C4.46 4 2 6.46 2 9.5S4.5 21 4.5 21H10v-2h2v2h5.5l1.68-5.59 2.82-.94V7.5h-2.17z"/>
-		</svg>
+		<div class="brand-logo">
+			<svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+				<path d="M19.83 7.5l-2.27-2.27c.07-.42.18-.81.32-1.15.23-.56.56-1.06.97-1.5-.7-.37-1.5-.58-2.35-.58-1.64 0-3.09.79-4 2h-5C4.46 4 2 6.46 2 9.5S4.5 21 4.5 21H10v-2h2v2h5.5l1.68-5.59 2.82-.94V7.5h-2.17z"/>
+			</svg>
+		</div>
 		<span class="nav-brand-text">FinTrack</span>
 	</div>
 
@@ -36,11 +38,14 @@
 				href={item.path}
 				class="nav-item"
 				class:active={isActive(item.path)}
+				aria-current={isActive(item.path) ? 'page' : undefined}
 			>
-				<span class="nav-icon">
-					<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-						<path d={svgPaths[item.icon]} />
-					</svg>
+				<span class="nav-indicator">
+					<span class="nav-icon">
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+							<path d={svgPaths[item.icon]} />
+						</svg>
+					</span>
 				</span>
 				<span class="nav-label">{item.label}</span>
 			</a>
@@ -55,11 +60,14 @@
 			href={item.path}
 			class="bottom-item"
 			class:active={isActive(item.path)}
+			aria-current={isActive(item.path) ? 'page' : undefined}
 		>
-			<span class="bottom-icon">
-				<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-					<path d={svgPaths[item.icon]} />
-				</svg>
+			<span class="bottom-indicator">
+				<span class="bottom-icon">
+					<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+						<path d={svgPaths[item.icon]} />
+					</svg>
+				</span>
 			</span>
 			<span class="bottom-label">{item.label}</span>
 		</a>
@@ -67,7 +75,7 @@
 </nav>
 
 <style>
-	/* Desktop Nav Rail */
+	/* ── Desktop Nav Rail ── */
 	.nav-rail {
 		display: none;
 		position: fixed;
@@ -76,59 +84,104 @@
 		width: 80px;
 		height: 100vh;
 		background: var(--md-surface);
-		border-right: 1px solid var(--md-outline);
+		border-right: 1px solid var(--md-outline-variant);
 		flex-direction: column;
 		align-items: center;
-		padding: 16px 0;
-		gap: 8px;
+		padding: 20px 0 16px;
 		z-index: 100;
 	}
+
 	.nav-brand {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 4px;
-		margin-bottom: 16px;
+		gap: 6px;
+		margin-bottom: 28px;
 	}
+
+	.brand-logo {
+		width: 40px;
+		height: 40px;
+		background: var(--md-primary);
+		border-radius: var(--md-shape-medium);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+	}
+
 	.nav-brand-text {
-		font-size: 0.625rem;
+		font-size: 0.5625rem;
 		font-weight: 700;
-		color: var(--md-primary);
-		letter-spacing: 0.05em;
+		color: var(--md-on-surface-variant);
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
 	}
+
 	.nav-items {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 4px;
 		width: 100%;
 	}
+
 	.nav-item {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		gap: 4px;
-		padding: 12px 0;
-		width: 64px;
-		border-radius: var(--md-shape-large);
+		padding: 4px 0 6px;
+		width: 100%;
 		text-decoration: none;
 		color: var(--md-on-surface-variant);
-		transition: all 0.15s ease;
-	}
-	.nav-item:hover {
-		background: var(--md-surface-container);
-	}
-	.nav-item.active {
-		color: var(--md-primary);
-		background: var(--md-primary-container);
-	}
-	.nav-label {
-		font-size: 0.625rem;
-		font-weight: 500;
-		text-align: center;
+		transition: color var(--anim-fast) ease;
 	}
 
-	/* Mobile Bottom Nav */
+	.nav-indicator {
+		width: 56px;
+		height: 32px;
+		border-radius: var(--md-shape-full);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: transparent;
+		transition:
+			background var(--anim-normal) cubic-bezier(0.2, 0, 0, 1),
+			transform var(--anim-fast) ease;
+	}
+
+	.nav-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: transform var(--anim-fast) cubic-bezier(0.2, 0, 0, 1);
+	}
+
+	.nav-item:hover .nav-indicator {
+		background: var(--md-surface-container);
+	}
+
+	.nav-item:hover .nav-icon {
+		transform: scale(1.15);
+	}
+
+	.nav-item.active {
+		color: var(--md-primary);
+	}
+
+	.nav-item.active .nav-indicator {
+		background: var(--md-primary-container);
+		transform: scale(1.05);
+	}
+
+	.nav-label {
+		font-size: 0.625rem;
+		font-weight: 600;
+		text-align: center;
+		letter-spacing: 0.01em;
+	}
+
+	/* ── Mobile Bottom Nav ── */
 	.bottom-nav {
 		display: flex;
 		position: fixed;
@@ -137,39 +190,65 @@
 		right: 0;
 		height: 64px;
 		background: var(--md-surface);
-		border-top: 1px solid var(--md-outline);
+		border-top: 1px solid var(--md-outline-variant);
 		z-index: 100;
 		justify-content: space-around;
 		align-items: center;
 		padding: 0 8px;
 	}
+
 	.bottom-item {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 2px;
-		padding: 8px 12px;
-		border-radius: var(--md-shape-large);
+		gap: 4px;
+		flex: 1;
 		text-decoration: none;
 		color: var(--md-on-surface-variant);
-		transition: all 0.15s ease;
-		min-width: 64px;
+		transition: color var(--anim-fast) ease;
 	}
+
+	.bottom-indicator {
+		width: 64px;
+		height: 32px;
+		border-radius: var(--md-shape-full);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: transparent;
+		transition:
+			background var(--anim-normal) cubic-bezier(0.2, 0, 0, 1),
+			transform var(--anim-fast) ease;
+	}
+
+	.bottom-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: transform var(--anim-fast) cubic-bezier(0.2, 0, 0, 1);
+	}
+
+	.bottom-item:hover .bottom-icon {
+		transform: scale(1.1);
+	}
+
 	.bottom-item.active {
 		color: var(--md-primary);
 	}
-	.bottom-label {
-		font-size: 0.625rem;
-		font-weight: 500;
+
+	.bottom-item.active .bottom-indicator {
+		background: var(--md-primary-container);
+		transform: scale(1.05);
 	}
 
-	/* Responsive */
+	.bottom-label {
+		font-size: 0.625rem;
+		font-weight: 600;
+	}
+
+	/* ── Responsive ── */
 	@media (min-width: 768px) {
-		.nav-rail {
-			display: flex;
-		}
-		.bottom-nav {
-			display: none;
-		}
+		.nav-rail   { display: flex; }
+		.bottom-nav { display: none; }
 	}
 </style>

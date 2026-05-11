@@ -21,13 +21,21 @@
 
 	function buildChart() {
 		if (!canvas) return;
+		if (chart) chart.destroy();
 
-		if (chart) {
-			chart.destroy();
-		}
+		const ctx2d = canvas.getContext('2d')!;
+		const h = canvas.parentElement?.clientHeight || 280;
 
-		const labels = data.map((d) => getMonthLabel(d.month));
-		const incomes = data.map((d) => d.income);
+		const incomeGrad = ctx2d.createLinearGradient(0, 0, 0, h);
+		incomeGrad.addColorStop(0, 'rgba(52, 168, 83, 0.92)');
+		incomeGrad.addColorStop(1, 'rgba(52, 168, 83, 0.52)');
+
+		const expenseGrad = ctx2d.createLinearGradient(0, 0, 0, h);
+		expenseGrad.addColorStop(0, 'rgba(234, 67, 53, 0.92)');
+		expenseGrad.addColorStop(1, 'rgba(234, 67, 53, 0.52)');
+
+		const labels  = data.map((d) => getMonthLabel(d.month));
+		const incomes  = data.map((d) => d.income);
 		const expenses = data.map((d) => d.expense);
 
 		chart = new Chart(canvas, {
@@ -38,15 +46,15 @@
 					{
 						label: 'Pemasukan',
 						data: incomes,
-						backgroundColor: '#34A853',
-						borderRadius: 4,
+						backgroundColor: incomeGrad,
+						borderRadius: 6,
 						borderSkipped: false
 					},
 					{
 						label: 'Pengeluaran',
 						data: expenses,
-						backgroundColor: '#EA4335',
-						borderRadius: 4,
+						backgroundColor: expenseGrad,
+						borderRadius: 6,
 						borderSkipped: false
 					}
 				]
@@ -54,13 +62,15 @@
 			options: {
 				responsive: true,
 				maintainAspectRatio: false,
-				interaction: {
-					intersect: false,
-					mode: 'index'
+				interaction: { intersect: false, mode: 'index' },
+				animation: {
+					duration: 600,
+					easing: 'easeOutQuart'
 				},
 				scales: {
 					x: {
 						grid: { display: false },
+						border: { display: false },
 						ticks: {
 							font: { family: 'DM Sans', size: 11 },
 							color: '#5F6368'
@@ -69,16 +79,18 @@
 					y: {
 						beginAtZero: true,
 						grid: {
-							color: '#E8EAED',
-							drawBorder: false
+							color: '#F1F3F4',
+							lineWidth: 1
 						},
+						border: { display: false, dash: [4, 4] },
 						ticks: {
 							font: { family: 'DM Sans', size: 11 },
 							color: '#5F6368',
-							callback: function(value) {
+							maxTicksLimit: 5,
+							callback(value) {
 								const val = value as number;
 								if (val >= 1_000_000) return `${(val / 1_000_000).toFixed(0)}jt`;
-								if (val >= 1_000) return `${(val / 1_000).toFixed(0)}rb`;
+								if (val >= 1_000)     return `${(val / 1_000).toFixed(0)}rb`;
 								return val.toString();
 							}
 						}
@@ -90,19 +102,22 @@
 						labels: {
 							padding: 16,
 							usePointStyle: true,
-							pointStyleWidth: 10,
+							pointStyleWidth: 8,
 							font: { family: 'DM Sans', size: 12 },
 							color: '#5F6368'
 						}
 					},
 					tooltip: {
-						backgroundColor: '#323232',
-						titleFont: { family: 'DM Sans', size: 13 },
+						backgroundColor: '#2d2d2d',
+						titleFont: { family: 'DM Sans', size: 13, weight: 'bold' },
 						bodyFont: { family: 'DM Sans', size: 12 },
 						padding: 12,
-						cornerRadius: 8,
+						cornerRadius: 10,
+						displayColors: true,
+						boxWidth: 10,
+						boxHeight: 10,
 						callbacks: {
-							label: function(context) {
+							label(context) {
 								const val = context.parsed.y as number;
 								return ` ${context.dataset.label}: Rp${val.toLocaleString('id-ID')}`;
 							}
@@ -115,23 +130,16 @@
 
 	$effect(() => {
 		data;
-		if (canvas) {
-			buildChart();
-		}
+		if (canvas) buildChart();
 	});
 
 	onMount(() => {
-		if (data.length > 0 && canvas) {
-			buildChart();
-		}
+		if (data.length > 0 && canvas) buildChart();
 	});
 
 	$effect(() => {
 		return () => {
-			if (chart) {
-				chart.destroy();
-				chart = null;
-			}
+			if (chart) { chart.destroy(); chart = null; }
 		};
 	});
 </script>
@@ -141,7 +149,7 @@
 	<div class="chart-wrapper">
 		{#if data.length === 0}
 			<div class="empty-state">
-				<svg width="48" height="48" viewBox="0 0 24 24" fill="#DADCE0">
+				<svg width="44" height="44" viewBox="0 0 24 24" fill="#DADCE0">
 					<path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
 				</svg>
 				<p>Belum ada data tren</p>
@@ -158,30 +166,44 @@
 		border-radius: var(--md-shape-medium);
 		box-shadow: var(--md-elevation-1);
 		padding: 20px;
+		animation: chart-enter var(--anim-slow) cubic-bezier(0.2, 0, 0, 1) both;
+		animation-delay: 80ms;
 	}
+
+	@keyframes chart-enter {
+		from { opacity: 0; transform: scale(0.97); }
+		to   { opacity: 1; transform: scale(1); }
+	}
+
 	.chart-title {
-		font-size: 1rem;
+		font-size: 0.9375rem;
 		font-weight: 600;
 		color: var(--md-on-surface);
-		margin: 0 0 16px 0;
+		margin: 0 0 16px;
+		letter-spacing: -0.01em;
 	}
+
 	.chart-wrapper {
 		height: 280px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
+
 	canvas {
 		max-height: 260px;
 	}
+
 	.empty-state {
 		text-align: center;
 		color: var(--md-on-surface-variant);
 		font-size: 0.875rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 8px;
 	}
-	.empty-state svg {
-		margin-bottom: 8px;
-	}
+
 	.empty-state p {
 		margin: 0;
 	}
