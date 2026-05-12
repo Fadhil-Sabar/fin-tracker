@@ -25,11 +25,10 @@
 <nav class="nav-rail" aria-label="Navigasi utama">
 	<div class="nav-brand">
 		<div class="brand-logo">
-			<svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+			<svg width="20" height="20" viewBox="0 0 24 24" fill="white">
 				<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 16v-4h-4l5-8v4h4l-5 8z"/>
 			</svg>
 		</div>
-		<span class="nav-brand-text">FinTrack</span>
 	</div>
 
 	<div class="nav-items">
@@ -93,17 +92,16 @@
 
 	.nav-brand {
 		display: flex;
-		flex-direction: column;
 		align-items: center;
-		gap: 6px;
+		justify-content: center;
 		margin-bottom: 28px;
 	}
 
 	.brand-logo {
-		width: 40px;
-		height: 40px;
+		width: 42px;
+		height: 42px;
 		background: linear-gradient(135deg, var(--md-primary), var(--md-tertiary));
-		border-radius: var(--md-shape-medium);
+		border-radius: var(--md-shape-small);
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -113,14 +111,6 @@
 
 	.brand-logo:hover {
 		transform: scale(1.08) rotate(-3deg);
-	}
-
-	.nav-brand-text {
-		font-size: 0.5625rem;
-		font-weight: 700;
-		color: var(--md-on-surface-variant);
-		letter-spacing: 0.1em;
-		text-transform: uppercase;
 	}
 
 	.nav-items {

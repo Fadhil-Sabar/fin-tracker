@@ -142,7 +142,7 @@
 	.transaction-table th {
 		text-align: left;
 		padding: 10px 8px;
-		font-weight: 600;
+		font-weight: 700;
 		color: var(--md-on-surface-variant);
 		font-size: 0.6875rem;
 		text-transform: uppercase;
@@ -166,6 +166,10 @@
 
 	.transaction-table tr:last-child td {
 		border-bottom: none;
+	}
+
+	.transaction-table tbody tr:hover td {
+		background: var(--md-surface-container-low);
 	}
 
 	.transaction-table tbody tr {
@@ -209,16 +213,16 @@
 
 	.cat-tag {
 		display: inline-block;
-		padding: 3px 9px;
+		padding: 3px 10px;
 		border-radius: var(--md-shape-full);
-		font-size: 0.75rem;
-		font-weight: 500;
+		font-size: 0.6875rem;
+		font-weight: 600;
 		text-transform: capitalize;
 	}
 
 	.cat-tag.expense {
 		background: var(--md-error-container);
-		color: var(--md-on-error-container);
+		color: var(--md-on-error);
 	}
 
 	.cat-tag.income {

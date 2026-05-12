@@ -155,10 +155,4 @@
 		color: var(--md-on-surface-variant);
 		line-height: 1;
 	}
-
-	@media (min-width: 1024px) {
-		.card-value {
-			font-size: 1.625rem;
-		}
-	}
 </style>
