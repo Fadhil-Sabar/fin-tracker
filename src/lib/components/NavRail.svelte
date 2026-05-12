@@ -26,7 +26,7 @@
 	<div class="nav-brand">
 		<div class="brand-logo">
 			<svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-				<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 16v-4h-4l5-8v4h4l-5 8z"/>
+				<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
 			</svg>
 		</div>
 	</div>
@@ -100,12 +100,12 @@
 	.brand-logo {
 		width: 42px;
 		height: 42px;
-		background: linear-gradient(135deg, var(--md-primary), var(--md-tertiary));
-		border-radius: var(--md-shape-small);
+		background: var(--md-primary);
+		border-radius: 50%;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		box-shadow: 0 2px 12px rgba(181,101,60,0.30);
+		box-shadow: 0 2px 8px rgba(181,101,60,0.25);
 		transition: transform var(--anim-normal);
 	}
 
@@ -170,10 +170,7 @@
 	}
 
 	.nav-label {
-		font-size: 0.625rem;
-		font-weight: 600;
-		text-align: center;
-		letter-spacing: 0.01em;
+		display: none;
 	}
 
 	/* ── Mobile Bottom Nav ── */

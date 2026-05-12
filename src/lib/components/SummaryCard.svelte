@@ -130,7 +130,7 @@
 	.card-icon {
 		width: 32px;
 		height: 32px;
-		border-radius: 8px;
+		border-radius: 10px;
 		display: flex;
 		align-items: center;
 		justify-content: center;

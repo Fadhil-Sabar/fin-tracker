@@ -23,19 +23,6 @@
 		if (!canvas) return;
 		if (chart) chart.destroy();
 
-		const ctx2d = canvas.getContext('2d')!;
-		const h = canvas.parentElement?.clientHeight || 280;
-
-		// Sage green gradient for income
-		const incomeGrad = ctx2d.createLinearGradient(0, 0, 0, h);
-		incomeGrad.addColorStop(0, 'rgba(107, 143, 78, 0.92)');
-		incomeGrad.addColorStop(1, 'rgba(107, 143, 78, 0.52)');
-
-		// Brick red gradient for expense
-		const expenseGrad = ctx2d.createLinearGradient(0, 0, 0, h);
-		expenseGrad.addColorStop(0, 'rgba(195, 59, 42, 0.92)');
-		expenseGrad.addColorStop(1, 'rgba(195, 59, 42, 0.52)');
-
 		const labels  = data.map((d) => getMonthLabel(d.month));
 		const incomes  = data.map((d) => d.income);
 		const expenses = data.map((d) => d.expense);
@@ -48,14 +35,14 @@
 					{
 						label: 'Pemasukan',
 						data: incomes,
-						backgroundColor: incomeGrad,
+						backgroundColor: '#6B8F4E',
 						borderRadius: 6,
 						borderSkipped: false
 					},
 					{
 						label: 'Pengeluaran',
 						data: expenses,
-						backgroundColor: expenseGrad,
+						backgroundColor: '#C33B2A',
 						borderRadius: 6,
 						borderSkipped: false
 					}

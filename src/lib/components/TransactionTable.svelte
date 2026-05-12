@@ -34,6 +34,24 @@
 		if (sortField !== field) return '';
 		return sortDir === 'desc' ? ' ↓' : ' ↑';
 	}
+
+	const CATEGORY_STYLES: Record<string, { bg: string; color: string }> = {
+		gaji:      { bg: '#DEE8D2', color: '#1F2E12' },
+		lainnya:   { bg: '#EBE3D8', color: '#716257' }
+	};
+	const EXPENSE_TAG  = { bg: '#F5D6D0', color: '#7A1C10' };
+	const INCOME_TAG   = { bg: '#DEE8D2', color: '#1F2E12' };
+	const DEFAULT_TAG  = { bg: '#EBE3D8', color: '#716257' };
+
+	function getCatStyle(category: string, type: string): string {
+		const key = category.toLowerCase();
+		if (CATEGORY_STYLES[key]) {
+			const s = CATEGORY_STYLES[key];
+			return `background:${s.bg};color:${s.color};`;
+		}
+		const s = type === 'expense' ? EXPENSE_TAG : type === 'income' ? INCOME_TAG : DEFAULT_TAG;
+		return `background:${s.bg};color:${s.color};`;
+	}
 </script>
 
 <div class="table-section">
@@ -79,8 +97,7 @@
 							<td data-label="Kategori">
 								<span
 									class="cat-tag"
-									class:expense={txn.type === 'expense'}
-									class:income={txn.type === 'income'}
+									style={getCatStyle(txn.category, txn.type)}
 								>
 									{txn.category}
 								</span>
@@ -168,22 +185,13 @@
 		border-bottom: none;
 	}
 
-	.transaction-table tbody tr:hover td {
-		background: var(--md-surface-container-low);
-	}
-
 	.transaction-table tbody tr {
-		transition: background var(--anim-fast) ease;
 		animation: row-in var(--anim-normal) ease both;
 	}
 
 	@keyframes row-in {
 		from { opacity: 0; transform: translateY(6px); }
 		to   { opacity: 1; transform: translateY(0); }
-	}
-
-	.transaction-table tbody tr:hover {
-		background: var(--md-surface-container-low);
 	}
 
 	.date-cell {
@@ -206,7 +214,7 @@
 		white-space: nowrap;
 	}
 
-	.amount-cell.expense { color: var(--md-error); }
+	.amount-cell.expense { color: var(--md-on-surface); }
 	.amount-cell.income  { color: var(--md-secondary); }
 
 	.amount-col { text-align: right; }
@@ -218,16 +226,6 @@
 		font-size: 0.6875rem;
 		font-weight: 600;
 		text-transform: capitalize;
-	}
-
-	.cat-tag.expense {
-		background: var(--md-error-container);
-		color: var(--md-on-error);
-	}
-
-	.cat-tag.income {
-		background: var(--md-secondary-container);
-		color: var(--md-on-secondary-container);
 	}
 
 	.empty-state {
@@ -276,10 +274,6 @@
 				"date     amount";
 			gap: 4px 8px;
 			align-items: center;
-		}
-
-		.transaction-table tbody tr:hover {
-			background: var(--md-surface-container);
 		}
 
 		.transaction-table td {
