@@ -15,9 +15,9 @@
 	let chart: Chart | null = null;
 
 	const COLORS = [
-		'#1A73E8', '#34A853', '#EA4335', '#FBBC04',
-		'#0891A3', '#7C4DFF', '#FF6D01', '#C5221F',
-		'#185ABC', '#137333', '#E37400', '#9334E6'
+		'#B5653C', '#6B8F4E', '#C33B2A', '#C08050',
+		'#D4B096', '#A3C48A', '#D98A6F', '#E6C39A',
+		'#8F735F', '#7CA86E', '#BF553E', '#B3927A'
 	];
 
 	// Plugin: draw total amount in the donut center
@@ -40,11 +40,11 @@
 			ctx.textBaseline = 'middle';
 
 			ctx.font = '500 11px "DM Sans", sans-serif';
-			ctx.fillStyle = '#5F6368';
+			ctx.fillStyle = '#716257';
 			ctx.fillText('Total', cx, cy - 11);
 
 			ctx.font = 'bold 14px "DM Sans", sans-serif';
-			ctx.fillStyle = '#202124';
+			ctx.fillStyle = '#36271D';
 			ctx.fillText(formatCurrencyShort(total), cx, cy + 9);
 
 			ctx.restore();
@@ -91,7 +91,7 @@
 							usePointStyle: true,
 							pointStyleWidth: 8,
 							font: { family: 'DM Sans', size: 12 },
-							color: '#5F6368'
+							color: '#716257'
 						}
 					},
 					tooltip: {
@@ -143,7 +143,7 @@
 	<div class="chart-wrapper">
 		{#if data.length === 0}
 			<div class="empty-state">
-				<svg width="44" height="44" viewBox="0 0 24 24" fill="#DADCE0">
+				<svg width="44" height="44" viewBox="0 0 24 24" fill="#CEC3B6">
 					<path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
 				</svg>
 				<p>Tidak ada data pengeluaran bulan ini</p>

@@ -5,245 +5,210 @@
 	import DonutChart from '$lib/components/DonutChart.svelte';
 	import TrendChart from '$lib/components/TrendChart.svelte';
 	import TransactionTable from '$lib/components/TransactionTable.svelte';
+	import { getLastMonths, getMonthName, percentDiff } from '$lib/utils';
 
 	const store = createStore();
 
-	const loading     = $derived(store.loading);
-	const error       = $derived(store.error);
-	const summary     = $derived(store.dashboardSummary);
-	const categories  = $derived(store.categoryBreakdown);
-	const trend       = $derived(store.monthlyTrend);
-	const recentTxns  = $derived(store.filteredTransactions.slice(0, 10));
-	const loadTransactions = store.loadTransactions;
+	const loading = $derived(store.loading);
+	const summary = $derived(store.dashboardSummary);
+	const categoryData = $derived(store.categoryBreakdown);
+	const trendData = $derived(store.monthlyTrend);
+	const recentTxns = $derived(store.filteredTransactions.slice(0, 10));
 
-	let initialLoading = $state(true);
+	const months = getLastMonths(6);
+	const currentMonth = new Date();
+	const currentMonthLabel = `${getMonthName(currentMonth.getMonth())} ${currentMonth.getFullYear()}`;
+
+	let selectedMonth = $state(currentMonthLabel);
 
 	onMount(() => {
-		const unsub = $effect.root(() => {
-			$effect(() => {
-				if (!loading && initialLoading) {
-					setTimeout(() => { initialLoading = false; }, 300);
-				}
-			});
-		});
-		return () => unsub();
+		store.loadTransactions();
 	});
 </script>
 
-{#if initialLoading}
-	<!-- Skeleton -->
-	<div class="dashboard">
+<div class="dashboard">
+	<!-- Top Bar: Brand Title + Actions (sketch matching) -->
+	<div class="top-bar">
+		<h1 class="page-title"><span class="title-accent">Fin</span>Track</h1>
+		<div class="top-actions">
+			<button class="top-btn top-btn-secondary">
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+					<path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/>
+				</svg>
+				Filter
+			</button>
+			<button class="top-btn top-btn-primary">
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+					<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+				</svg>
+				+ Tambah
+			</button>
+		</div>
+	</div>
+
+	<!-- Summary Cards Grid -->
+	{#if loading}
 		<div class="cards-grid">
 			{#each Array(4) as _}
-				<div class="md-card skeleton-card">
-					<div class="md-skeleton" style="width: 70px; height: 12px; margin-bottom: 14px;"></div>
-					<div class="md-skeleton" style="width: 130px; height: 28px; margin-bottom: 10px;"></div>
-					<div class="md-skeleton" style="width: 90px; height: 11px;"></div>
+				<div class="md-card" style="padding: 20px;">
+					<div class="md-skeleton" style="width: 40%; height: 14px; margin-bottom: 12px;"></div>
+					<div class="md-skeleton" style="width: 65%; height: 24px; margin-bottom: 8px;"></div>
+					<div class="md-skeleton" style="width: 30%; height: 12px;"></div>
 				</div>
 			{/each}
 		</div>
-		<div class="charts-grid">
-			{#each Array(2) as _}
-				<div class="md-card skeleton-chart">
-					<div class="md-skeleton" style="width: 150px; height: 16px; margin-bottom: 20px;"></div>
-					<div class="md-skeleton" style="width: 100%; height: 230px; border-radius: var(--md-shape-small);"></div>
-				</div>
-			{/each}
-		</div>
-		<div class="md-card skeleton-chart" style="margin-top: 0;">
-			<div class="md-skeleton" style="width: 160px; height: 16px; margin-bottom: 20px;"></div>
-			{#each Array(5) as _}
-				<div class="md-skeleton" style="height: 36px; margin-bottom: 8px; border-radius: 6px;"></div>
-			{/each}
-		</div>
-	</div>
-
-{:else if error}
-	<!-- Error state -->
-	<div class="error-state">
-		<div class="error-icon">
-			<svg width="32" height="32" viewBox="0 0 24 24" fill="var(--md-error)">
-				<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-			</svg>
-		</div>
-		<h2 class="error-title">Gagal Memuat Data</h2>
-		<p class="error-msg">{error}</p>
-		<button class="retry-btn" onclick={() => loadTransactions()}>
-			Coba Lagi
-		</button>
-	</div>
-
-{:else}
-	<!-- Dashboard content -->
-	<div class="dashboard">
-		<!-- Summary Cards -->
+	{:else}
 		<div class="cards-grid">
-			<div class="card-enter" style="--delay: 0ms;">
-				<SummaryCard
-					title="Total Pemasukan"
-					value={summary.totalIncome}
-					delta={summary.lastMonthIncome > 0
-						? Math.round(((summary.totalIncome - summary.lastMonthIncome) / summary.lastMonthIncome) * 100)
-						: null}
-					icon="trending_up"
-					color="secondary"
-				/>
-			</div>
-			<div class="card-enter" style="--delay: 70ms;">
-				<SummaryCard
-					title="Total Pengeluaran"
-					value={summary.totalExpense}
-					delta={summary.lastMonthExpense > 0
-						? Math.round(((summary.totalExpense - summary.lastMonthExpense) / summary.lastMonthExpense) * 100)
-						: null}
-					icon="trending_down"
-					color="error"
-				/>
-			</div>
-			<div class="card-enter" style="--delay: 140ms;">
-				<SummaryCard
-					title="Saldo Bersih"
-					value={summary.balance}
-					icon="account_balance"
-					color="primary"
-				/>
-			</div>
-			<div class="card-enter" style="--delay: 210ms;">
-				<SummaryCard
-					title="Estimasi Tabungan"
-					value={summary.savings}
-					icon="savings"
-					color="tertiary"
-				/>
-			</div>
+			<SummaryCard
+				title="Total Pemasukan"
+				value={summary.totalIncome}
+				deltaLabel={percentDiff(summary.totalIncome, summary.lastMonthIncome) !== null
+					? `▲ ${percentDiff(summary.totalIncome, summary.lastMonthIncome)}% dari bulan lalu`
+					: null}
+				icon="trending_up"
+				color="secondary"
+			/>
+			<SummaryCard
+				title="Total Pengeluaran"
+				value={summary.totalExpense}
+				deltaLabel={percentDiff(summary.totalExpense, summary.lastMonthExpense) !== null
+					? `▲ ${percentDiff(summary.totalExpense, summary.lastMonthExpense)}% dari bulan lalu`
+					: null}
+				icon="trending_down"
+				color="error"
+			/>
+			<SummaryCard
+				title="Saldo Bersih"
+				value={summary.balance}
+				deltaLabel="● Sehat"
+				icon="account_balance"
+				color="primary"
+			/>
+			<SummaryCard
+				title="Estimasi Tabungan"
+				value={summary.savings}
+				deltaLabel={summary.savings > 0 && summary.totalIncome > 0
+					? `${Math.round((summary.savings / summary.totalIncome) * 100)}% dari penghasilan`
+					: null}
+				icon="savings"
+				color="tertiary"
+			/>
 		</div>
+	{/if}
 
-		<!-- Charts -->
-		<div class="charts-grid">
-			<DonutChart data={categories} />
-			<TrendChart data={trend} />
+	<!-- Charts Row -->
+	<div class="charts-row">
+		<div class="chart-col">
+			<DonutChart data={categoryData} />
 		</div>
-
-		<!-- Recent Transactions -->
-		<div class="recent-section">
-			<TransactionTable transactions={recentTxns} maxRows={10} />
+		<div class="chart-col">
+			<TrendChart data={trendData} />
 		</div>
 	</div>
-{/if}
+
+	<!-- Recent Transactions -->
+	<div class="recent-section">
+		<TransactionTable transactions={recentTxns} maxRows={10} />
+	</div>
+</div>
 
 <style>
 	.dashboard {
 		display: flex;
 		flex-direction: column;
-		gap: 16px;
+		gap: 20px;
 	}
 
-	.cards-grid {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 12px;
-	}
-
-	/* Wrapper that drives staggered entrance */
-	.card-enter {
-		animation: card-in var(--anim-slow) cubic-bezier(0.2, 0, 0, 1) both;
-		animation-delay: var(--delay, 0ms);
-	}
-
-	/* Make the card fill its wrapper */
-	.card-enter :global(.summary-card) {
-		height: 100%;
-	}
-
-	@keyframes card-in {
-		from { opacity: 0; transform: translateY(10px); }
-		to   { opacity: 1; transform: translateY(0); }
-	}
-
-	.charts-grid {
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: 16px;
-	}
-
-	/* Skeleton variants */
-	.skeleton-card {
-		padding: 20px;
-	}
-
-	.skeleton-chart {
-		padding: 20px;
-	}
-
-	/* Error */
-	.error-state {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		padding: 64px 20px;
-		text-align: center;
-		color: var(--md-on-surface-variant);
-		gap: 8px;
-	}
-
-	.error-icon {
-		width: 64px;
-		height: 64px;
-		background: var(--md-error-container);
-		border-radius: 50%;
+	/* ── Top Bar (sketch: "Fin" primary + "Track") ── */
+	.top-bar {
 		display: flex;
 		align-items: center;
-		justify-content: center;
-		margin-bottom: 8px;
+		justify-content: space-between;
+		margin-bottom: 4px;
 	}
 
-	.error-title {
+	.page-title {
+		font-size: 1.5rem;
+		font-weight: 700;
 		margin: 0;
-		font-size: 1.125rem;
-		font-weight: 600;
+		letter-spacing: -0.03em;
 		color: var(--md-on-surface);
 	}
 
-	.error-msg {
-		margin: 0;
-		font-size: 0.875rem;
-		max-width: 360px;
+	.title-accent {
+		color: var(--md-primary);
 	}
 
-	.retry-btn {
-		margin-top: 8px;
-		padding: 10px 28px;
-		background: var(--md-primary);
-		color: white;
-		border: none;
+	.top-actions {
+		display: flex;
+		gap: 8px;
+	}
+
+	.top-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		padding: 8px 18px;
 		border-radius: var(--md-shape-full);
-		font-size: 0.875rem;
+		font-size: 0.8125rem;
 		font-weight: 600;
-		cursor: pointer;
-		transition: all var(--anim-fast) ease;
 		font-family: inherit;
+		cursor: pointer;
+		transition: all var(--anim-fast) cubic-bezier(0.2, 0, 0, 1);
+		border: none;
 	}
 
-	.retry-btn:hover {
-		opacity: 0.88;
+	.top-btn-primary {
+		background: var(--md-primary);
+		color: var(--md-on-primary);
+	}
+
+	.top-btn-primary:hover {
+		background: #A05733;
 		box-shadow: var(--md-elevation-2);
 	}
 
+	.top-btn-secondary {
+		background: var(--md-surface-container);
+		border: 1px solid var(--md-outline);
+		color: var(--md-on-surface-variant);
+	}
+
+	.top-btn-secondary:hover {
+		background: var(--md-surface-container-high);
+	}
+
+	/* ── Cards Grid ── */
+	.cards-grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 14px;
+	}
+
 	@media (min-width: 640px) {
-		.cards-grid {
-			grid-template-columns: repeat(4, 1fr);
-			gap: 16px;
-		}
+		.cards-grid { grid-template-columns: repeat(2, 1fr); }
 	}
 
 	@media (min-width: 1024px) {
-		.charts-grid {
-			grid-template-columns: 1fr 1fr;
-		}
+		.cards-grid { grid-template-columns: repeat(4, 1fr); }
+	}
 
-		.dashboard {
-			gap: 20px;
-		}
+	/* ── Charts Row ── */
+	.charts-row {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 18px;
+	}
+
+	.chart-col {
+		overflow: hidden;
+	}
+
+	@media (min-width: 768px) {
+		.charts-row { grid-template-columns: 1fr 1fr; }
+	}
+
+	.recent-section {
+		/* card container handled by TransactionTable */
 	}
 </style>

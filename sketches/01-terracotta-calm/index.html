@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FinTrack — Terracotta Calm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* Earth tone palette — warm, grounded */
+    --primary:       #B5653C;  /* terracotta */
+    --on-primary:    #FFFFFF;
+    --primary-container: #F0DACD;
+    --on-primary-container: #4A2A1A;
+
+    --secondary:     #7A9B5A;  /* olive green */
+    --on-secondary:  #FFFFFF;
+    --secondary-container: #E0E8D5;
+    --on-secondary-container: #2D3D1E;
+
+    --tertiary:      #C77D4A;  /* clay orange */
+    --on-tertiary:   #FFFFFF;
+
+    --error:         #C33B2A;  /* rust red */
+    --on-error:      #FFFFFF;
+    --error-container: #F5D6D0;
+
+    --surface:       #FBF8F4;  /* warm off-white */
+    --surface-dim:   #F2EDE6;
+    --surface-bright: #FFFCF8;
+    --surface-container: #EDE6DC;
+    --surface-container-high: #E3D9CD;
+    --surface-container-low: #F7F2EB;
+
+    --on-surface:    #3D2B1F;  /* warm dark brown */
+    --on-surface-variant: #7A6B5E;
+
+    --outline:       #D6CCC2;  /* warm beige */
+    --outline-variant: #E3D9CD;
+
+    --elevation-1: 0 1px 2px rgba(61,43,31,0.10), 0 1px 3px 1px rgba(61,43,31,0.06);
+    --elevation-2: 0 1px 2px rgba(61,43,31,0.12), 0 2px 6px 2px rgba(61,43,31,0.08);
+    --elevation-3: 0 1px 3px rgba(61,43,31,0.14), 0 4px 8px 3px rgba(61,43,31,0.10);
+
+    --shape-sm: 8px;
+    --shape-md: 12px;
+    --shape-lg: 16px;
+    --shape-full: 9999px;
+
+    --anim-fast: 150ms;
+    --anim-norm: 300ms;
+    --anim-slow: 500ms;
+  }
+
+  body {
+    font-family: "DM Sans", sans-serif;
+    background: var(--surface-dim);
+    color: var(--on-surface);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* ── Nav Rail ── */
+  .nav-rail {
+    position: fixed;
+    left: 0; top: 0;
+    width: 80px; height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--outline-variant);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0 16px;
+    z-index: 100;
+  }
+
+  .nav-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 28px;
+  }
+
+  .brand-icon {
+    width: 40px; height: 40px;
+    background: var(--primary);
+    border-radius: var(--shape-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(181,101,60,0.28);
+    color: white;
+  }
+
+  .brand-label {
+    font-size: 0.5625rem;
+    font-weight: 700;
+    color: var(--on-surface-variant);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .nav-items { display: flex; flex-direction: column; align-items: center; width: 100%; gap: 2px; }
+
+  .nav-item {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    padding: 4px 0 6px; width: 100%; text-decoration: none;
+    color: var(--on-surface-variant); transition: color var(--anim-fast);
+    cursor: pointer;
+  }
+
+  .nav-indicator {
+    width: 56px; height: 32px; border-radius: var(--shape-full);
+    display: flex; align-items: center; justify-content: center;
+    background: transparent; transition: background var(--anim-norm), transform var(--anim-fast);
+  }
+
+  .nav-item:hover .nav-indicator { background: var(--surface-container); }
+  .nav-item.active { color: var(--primary); }
+  .nav-item.active .nav-indicator { background: var(--primary-container); transform: scale(1.05); }
+  .nav-label { font-size: 0.625rem; font-weight: 600; text-align: center; letter-spacing: 0.01em; }
+
+  /* ── Main Area ── */
+  .main {
+    margin-left: 80px;
+    flex: 1;
+    padding: 24px 28px;
+    max-width: 1200px;
+  }
+
+  .page-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; color: var(--on-surface); letter-spacing: -0.03em; }
+
+  .cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+
+  .card {
+    background: var(--surface); border-radius: var(--shape-md);
+    box-shadow: var(--elevation-1); padding: 18px 20px;
+    display: flex; flex-direction: column; gap: 8px;
+    transition: transform var(--anim-norm), box-shadow var(--anim-norm);
+    border-left: 3px solid var(--accent);
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: var(--elevation-2); }
+
+  .card-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--accent-bg); color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 0 4px var(--accent-glow);
+  }
+
+  .card-header { display: flex; align-items: center; gap: 10px; }
+  .card-title { font-size: 0.8125rem; color: var(--on-surface-variant); font-weight: 500; }
+  .card-value { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.2; }
+
+  .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+
+  .chart-card {
+    background: var(--surface); border-radius: var(--shape-md);
+    box-shadow: var(--elevation-1); padding: 20px;
+  }
+  .chart-title { font-size: 0.9375rem; font-weight: 600; margin-bottom: 16px; color: var(--on-surface); }
+
+  .chart-area { height: 260px; display: flex; align-items: center; justify-content: center; position: relative; }
+
+  /* Fake donut chart */
+  .donut { width: 160px; height: 160px; border-radius: 50%; position: relative;
+    background: conic-gradient(
+      var(--primary) 0deg 130deg,
+      var(--secondary) 130deg 210deg,
+      var(--error) 210deg 280deg,
+      var(--tertiary) 280deg 320deg,
+      #B8A08A 320deg 360deg
+    );
+    box-shadow: 0 0 0 8px var(--surface-container);
+  }
+  .donut-hole { position: absolute; inset: 30%; border-radius: 50%; background: var(--surface); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 2px; }
+  .donut-hole span:first-child { font-size: 0.625rem; color: var(--on-surface-variant); font-weight: 500; }
+  .donut-hole span:last-child { font-size: 0.8125rem; font-weight: 700; color: var(--on-surface); }
+
+  /* Fake bar chart */
+  .bars { display: flex; align-items: flex-end; gap: 10px; height: 180px; width: 100%; padding: 0 10px; }
+  .bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .bar-pair { display: flex; align-items: flex-end; gap: 4px; width: 100%; height: 160px; justify-content: center; }
+  .bar { width: 14px; border-radius: 3px 3px 0 0; min-height: 8px; transition: height var(--anim-slow); }
+  .bar.income { background: var(--secondary); }
+  .bar.expense { background: var(--error); }
+  .bar-label { font-size: 0.6875rem; color: var(--on-surface-variant); }
+
+  /* Fake legend */
+  .legend { display: flex; justify-content: center; gap: 20px; margin-top: 12px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--on-surface-variant); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* Transaction table */
+  .table-card {
+    background: var(--surface); border-radius: var(--shape-md);
+    box-shadow: var(--elevation-1); padding: 20px;
+  }
+  .table { width: 100%; border-collapse: collapse; }
+  .table th { text-align: left; font-size: 0.6875rem; font-weight: 700; color: var(--on-surface-variant); text-transform: uppercase; letter-spacing: 0.07em; padding: 10px 8px; border-bottom: 1px solid var(--outline-variant); }
+  .table td { padding: 10px 8px; font-size: 0.875rem; border-bottom: 1px solid var(--outline-variant); }
+  .table tr:last-child td { border-bottom: none; }
+  .tag { display: inline-block; padding: 2px 10px; border-radius: var(--shape-full); font-size: 0.6875rem; font-weight: 600; background: var(--surface-container); color: var(--on-surface-variant); }
+  .tag.income { background: var(--secondary-container); color: var(--on-secondary-container); }
+  .tag.expense { background: var(--error-container); color: var(--on-error); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--outline); border-radius: var(--shape-full); }
+</style>
+</head>
+<body>
+
+<!-- ═══ Nav Rail ═══ -->
+<nav class="nav-rail">
+  <div class="nav-brand">
+    <div class="brand-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 16v-4h-4l5-8v4h4l-5 8z"/>
+      </svg>
+    </div>
+    <span class="brand-label">FinTrack</span>
+  </div>
+
+  <div class="nav-items">
+    <a class="nav-item active">
+      <span class="nav-indicator"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg></span>
+      <span class="nav-label">Dashboard</span>
+    </a>
+    <a class="nav-item">
+      <span class="nav-indicator"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18 17H6v-2h12v2zm0-4H6v-2h12v2zm0-4H6V7h12v2zM3 22l1.5-1.5L6 22l1.5-1.5L9 22l1.5-1.5L12 22l1.5-1.5L15 22l1.5-1.5L18 22l1.5-1.5L21 22V2l-1.5 1.5L18 2l-1.5 1.5L15 2l-1.5 1.5L12 2l-1.5 1.5L9 2 7.5 3.5 6 2 4.5 3.5 3 2v20z"/></svg></span>
+      <span class="nav-label">Transaksi</span>
+    </a>
+    <a class="nav-item">
+      <span class="nav-indicator"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l-5.5 9h11L12 2zm0 3.84L13.93 9h-3.87L12 5.84zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5s2.01 4.5 4.5 4.5 4.5-2.01 4.5-4.5-2.01-4.5-4.5-4.5zm0 7a2.5 2.5 0 010-5 2.5 2.5 0 010 5zM3 21.5h8v-8H3v8zm2-6h4v4H5v-4z"/></svg></span>
+      <span class="nav-label">Kategori</span>
+    </a>
+  </div>
+</nav>
+
+<!-- ═══ Main ═══ -->
+<div class="main">
+
+  <h1 class="page-title">Dashboard</h1>
+
+  <!-- Summary Cards -->
+  <div class="cards-grid">
+    <div class="card" style="--accent: var(--secondary); --accent-bg: var(--secondary-container); --accent-glow: rgba(122,155,90,0.15);">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
+        </div>
+        <span class="card-title">Total Pemasukan</span>
+      </div>
+      <div class="card-value">Rp12.600.000</div>
+      <span style="font-size:0.75rem;color:var(--secondary)">▲ +5.2% dari bulan lalu</span>
+    </div>
+    <div class="card" style="--accent: var(--error); --accent-bg: var(--error-container); --accent-glow: rgba(195,59,42,0.15);">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 18l2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z"/></svg>
+        </div>
+        <span class="card-title">Total Pengeluaran</span>
+      </div>
+      <div class="card-value">Rp7.400.000</div>
+      <span style="font-size:0.75rem;color:var(--error)">▲ +2.1% dari bulan lalu</span>
+    </div>
+    <div class="card" style="--accent: var(--primary); --accent-bg: var(--primary-container); --accent-glow: rgba(181,101,60,0.15);">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 10v7h3v-7H4zm6 0v7h3v-7h-3zM2 22h19v-3H2v3zm14-12v7h3v-7h-3zm-4.5-9L2 6v2h19V6l-9.5-5z"/></svg>
+        </div>
+        <span class="card-title">Saldo Bersih</span>
+      </div>
+      <div class="card-value">Rp5.200.000</div>
+    </div>
+    <div class="card" style="--accent: var(--tertiary); --accent-bg: #F5E4D5; --accent-glow: rgba(199,125,74,0.15);">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.83 7.5l-2.27-2.27c.07-.42.18-.81.32-1.15.23-.56.56-1.06.97-1.5-.7-.37-1.5-.58-2.35-.58-1.64 0-3.09.79-4 2h-5C4.46 4 2 6.46 2 9.5S4.5 21 4.5 21H10v-2h2v2h5.5l1.68-5.59 2.82-.94V7.5h-2.17zM13 9H8V7h5v2zm3 2c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/></svg>
+        </div>
+        <span class="card-title">Estimasi Tabungan</span>
+      </div>
+      <div class="card-value">Rp2.300.000</div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3 class="chart-title">Pengeluaran per Kategori</h3>
+      <div class="chart-area">
+        <div class="donut"><div class="donut-hole"><span>Total</span><span>Rp7,4 jt</span></div></div>
+      </div>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-dot" style="background:var(--primary)"></span>Makanan</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--secondary)"></span>Transport</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--error)"></span>Belanja</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--tertiary)"></span>Tagihan</span>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h3 class="chart-title">Tren Bulanan</h3>
+      <div class="chart-area">
+        <div class="bars">
+          <div class="bar-group"><div class="bar-pair"><div class="bar income" style="height:70%"></div><div class="bar expense" style="height:45%"></div></div><span class="bar-label">Mar</span></div>
+          <div class="bar-group"><div class="bar-pair"><div class="bar income" style="height:85%"></div><div class="bar expense" style="height:55%"></div></div><span class="bar-label">Apr</span></div>
+          <div class="bar-group"><div class="bar-pair"><div class="bar income" style="height:75%"></div><div class="bar expense" style="height:60%"></div></div><span class="bar-label">Mei</span></div>
+          <div class="bar-group"><div class="bar-pair"><div class="bar income" style="height:90%"></div><div class="bar expense" style="height:50%"></div></div><span class="bar-label">Jun</span></div>
+          <div class="bar-group"><div class="bar-pair"><div class="bar income" style="height:65%"></div><div class="bar expense" style="height:40%"></div></div><span class="bar-label">Jul</span></div>
+        </div>
+      </div>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-dot" style="background:var(--secondary)"></span>Pemasukan</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--error)"></span>Pengeluaran</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Transactions -->
+  <div class="table-card">
+    <h3 class="chart-title" style="margin-bottom:12px">Transaksi Terbaru</h3>
+    <table class="table">
+      <thead><tr><th>Tanggal</th><th>Kategori</th><th>Keterangan</th><th>Jumlah</th></tr></thead>
+      <tbody>
+        <tr><td>11 Mei</td><td><span class="tag expense">Makanan</span></td><td>Makan siang</td><td>Rp45.000</td></tr>
+        <tr><td>10 Mei</td><td><span class="tag income">Gaji</span></td><td>Gaji April</td><td style="color:var(--secondary)">+Rp10.000.000</td></tr>
+        <tr><td>10 Mei</td><td><span class="tag expense">Transport</span></td><td>Isi bensin</td><td>Rp250.000</td></tr>
+        <tr><td>9 Mei</td><td><span class="tag expense">Tagihan</span></td><td>Listrik bulan ini</td><td>Rp385.000</td></tr>
+        <tr><td>8 Mei</td><td><span class="tag expense">Belanja</span></td><td>Alfamart</td><td>Rp128.000</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>

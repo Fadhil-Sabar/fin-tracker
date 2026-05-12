@@ -1,56 +1,59 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════
-   Material Design 3 — Design Tokens
+   Earthy Material 3 — Design Tokens
    ═══════════════════════════════════════════ */
 
 :root {
-  /* Primary — Google Blue */
-  --md-primary: #1A73E8;
+  /* Primary — Terracotta */
+  --md-primary: #B5653C;
   --md-on-primary: #FFFFFF;
-  --md-primary-container: #D2E3FC;
-  --md-on-primary-container: #062E6F;
+  --md-primary-container: #F3DCCF;
+  --md-on-primary-container: #3D2214;
 
-  /* Secondary — Google Green (Income) */
-  --md-secondary: #34A853;
+  /* Secondary — Sage (Income) */
+  --md-secondary: #6B8F4E;
   --md-on-secondary: #FFFFFF;
-  --md-secondary-container: #CEEAD6;
-  --md-on-secondary-container: #0D3B1E;
+  --md-secondary-container: #DEE8D2;
+  --md-on-secondary-container: #1F2E12;
 
-  /* Tertiary — Teal (Savings) */
-  --md-tertiary: #0891A3;
+  /* Tertiary — Warm Copper (Savings) */
+  --md-tertiary: #C08050;
   --md-on-tertiary: #FFFFFF;
+  --md-tertiary-container: #F4E1CD;
+  --md-on-tertiary-container: #3E2110;
 
-  /* Error — Google Red (Expense) */
-  --md-error: #EA4335;
+  /* Error — Brick (Expense) */
+  --md-error: #C33B2A;
   --md-on-error: #FFFFFF;
-  --md-error-container: #FAD2CF;
+  --md-error-container: #F5D6D0;
+  --md-on-error-container: #520F08;
 
-  /* Surface */
-  --md-surface: #FFFFFF;
-  --md-surface-dim: #F8F9FA;
+  /* Surface — Cream / Beige */
+  --md-surface: #FEFCF9;
+  --md-surface-dim: #F5F0EA;
   --md-surface-bright: #FFFFFF;
-  --md-surface-container: #F1F3F4;
-  --md-surface-container-high: #E8EAED;
-  --md-surface-container-low: #F8F9FA;
+  --md-surface-container: #EBE3D8;
+  --md-surface-container-high: #E0D6C8;
+  --md-surface-container-low: #FAF6F0;
 
-  /* On-Surface */
-  --md-on-surface: #202124;
-  --md-on-surface-variant: #5F6368;
+  /* On-Surface — Warm dark */
+  --md-on-surface: #36271D;
+  --md-on-surface-variant: #716257;
 
   /* Outline */
-  --md-outline: #DADCE0;
-  --md-outline-variant: #E8EAED;
+  --md-outline: #CEC3B6;
+  --md-outline-variant: #DDD4C7;
 
   /* Elevation shadows */
-  --md-elevation-1: 0 1px 2px rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
-  --md-elevation-2: 0 1px 2px rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15);
-  --md-elevation-3: 0 1px 3px rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
+  --md-elevation-1: 0 1px 3px rgba(54,39,29,0.07), 0 1px 2px rgba(54,39,29,0.04);
+  --md-elevation-2: 0 2px 6px rgba(54,39,29,0.08), 0 3px 8px rgba(54,39,29,0.04);
+  --md-elevation-3: 0 4px 12px rgba(54,39,29,0.10), 0 6px 20px rgba(54,39,29,0.06);
 
   /* Shape */
-  --md-shape-small: 8px;
-  --md-shape-medium: 12px;
-  --md-shape-large: 16px;
+  --md-shape-small: 10px;
+  --md-shape-medium: 14px;
+  --md-shape-large: 18px;
   --md-shape-full: 9999px;
 
   /* Animation timing */
@@ -67,8 +70,8 @@ body {
   font-family: "DM Sans", sans-serif;
   background-color: var(--md-surface-dim);
   background-image:
-    radial-gradient(ellipse at 2% 2%, rgba(26, 115, 232, 0.05) 0%, transparent 55%),
-    radial-gradient(ellipse at 98% 98%, rgba(8, 145, 163, 0.04) 0%, transparent 55%);
+    radial-gradient(ellipse at 20% 10%, rgba(181,101,60,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse at 90% 90%, rgba(107,143,78,0.03) 0%, transparent 60%);
   background-attachment: fixed;
   color: var(--md-on-surface);
   -webkit-font-smoothing: antialiased;
@@ -125,7 +128,7 @@ body {
   background: var(--md-primary-container);
   border-color: var(--md-primary);
   color: var(--md-on-primary-container);
-  box-shadow: 0 1px 4px rgba(26, 115, 232, 0.25);
+  box-shadow: 0 1px 4px rgba(181,101,60,0.25);
   transform: scale(1);
 }
 

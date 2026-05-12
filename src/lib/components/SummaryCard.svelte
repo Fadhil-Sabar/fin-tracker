@@ -4,35 +4,26 @@
 	let {
 		title = '',
 		value = 0,
-		delta = null as number | null,
+		deltaLabel = null as string | null,
 		icon = '',
 		color = 'primary'
 	}: {
 		title: string;
 		value: number;
-		delta?: number | null;
+		deltaLabel?: string | null;
 		icon?: string;
 		color?: 'primary' | 'secondary' | 'error' | 'tertiary';
 	} = $props();
 
 	const colors = {
-		primary:   { bg: '#D2E3FC', text: '#1A73E8', glow: 'rgba(26,115,232,0.15)',  deltaUp: '#34A853', deltaDown: '#EA4335' },
-		secondary: { bg: '#CEEAD6', text: '#34A853', glow: 'rgba(52,168,83,0.15)',   deltaUp: '#34A853', deltaDown: '#EA4335' },
-		error:     { bg: '#FAD2CF', text: '#EA4335', glow: 'rgba(234,67,53,0.15)',   deltaUp: '#34A853', deltaDown: '#EA4335' },
-		tertiary:  { bg: '#C3ECF0', text: '#0891A3', glow: 'rgba(8,145,163,0.15)',   deltaUp: '#34A853', deltaDown: '#EA4335' }
+		primary:   { bar: '#B5653C', bg: '#F3DCCF', text: '#3D2214' },
+		secondary: { bar: '#6B8F4E', bg: '#DEE8D2', text: '#1F2E12' },
+		error:     { bar: '#C33B2A', bg: '#F5D6D0', text: '#520F08' },
+		tertiary:  { bar: '#C08050', bg: '#F4E1CD', text: '#3E2110' }
 	};
 
 	const palette = $derived(colors[color]);
-
-	const deltaFormatted = $derived(
-		delta !== null ? `${delta > 0 ? '+' : ''}${delta}% dari bulan lalu` : null
-	);
-
-	const deltaColor = $derived(
-		delta !== null
-			? (delta >= 0 ? palette.deltaUp : palette.deltaDown)
-			: 'var(--md-on-surface-variant)'
-	);
+	const valueColor = $derived(color === 'primary' ? 'var(--md-primary)' : color === 'secondary' ? 'var(--md-secondary)' : color === 'error' ? 'var(--md-error)' : 'var(--md-tertiary)');
 
 	const svgPaths: Record<string, string> = {
 		trending_up:     'M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z',
@@ -41,7 +32,7 @@
 		savings:         'M19.83 7.5l-2.27-2.27c.07-.42.18-.81.32-1.15.23-.56.56-1.06.97-1.5-.7-.37-1.5-.58-2.35-.58-1.64 0-3.09.79-4 2h-5C4.46 4 2 6.46 2 9.5S4.5 21 4.5 21H10v-2h2v2h5.5l1.68-5.59 2.82-.94V7.5h-2.17zM13 9H8V7h5v2zm3 2c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z'
 	};
 
-	// ── Count-up animation ──────────────────────────────────
+	// ── Count-up animation ──
 	let displayValue = $state(0);
 	let animFrame = 0;
 
@@ -54,7 +45,6 @@
 		function tick(now: number) {
 			const elapsed = now - t0;
 			const progress = Math.min(elapsed / duration, 1);
-			// ease-out quart
 			const eased = 1 - Math.pow(1 - progress, 4);
 			displayValue = Math.round(origin + (target - origin) * eased);
 			if (progress < 1) {
@@ -75,88 +65,99 @@
 
 <div
 	class="md-card summary-card"
-	style="--accent: {palette.text}; --accent-bg: {palette.bg}; --accent-glow: {palette.glow};"
+	style="--card-accent: {palette.bar}; --card-accent-bg: {palette.bg};"
 >
-	<div class="summary-header">
-		<span class="summary-icon">
-			<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-				<path d={svgPaths[icon] || svgPaths.trending_up} />
-			</svg>
-		</span>
-		<span class="summary-title">{title}</span>
-	</div>
-	<div class="summary-value tabular-nums">{formatCurrency(displayValue)}</div>
-	{#if deltaFormatted}
-		<div class="summary-delta" style="color: {deltaColor}">
-			{deltaFormatted}
+	<div class="accent-bar"></div>
+	<div class="card-body">
+		<div class="card-top">
+			<span class="card-label">{title}</span>
+			<div class="card-icon" style="background: {palette.bg}; color: {palette.bar};">
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+					<path d={svgPaths[icon] || svgPaths.trending_up} />
+				</svg>
+			</div>
 		</div>
-	{/if}
+		<div class="card-value tabular-nums" style="color: {valueColor}">
+			{formatCurrency(displayValue)}
+		</div>
+		{#if deltaLabel}
+			<div class="card-delta">{deltaLabel}</div>
+		{/if}
+	</div>
 </div>
 
 <style>
 	.summary-card {
-		padding: 20px;
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
-		border-left: 3px solid var(--accent);
+		overflow: hidden;
 		transition:
 			transform var(--anim-normal) cubic-bezier(0.2, 0, 0, 1),
 			box-shadow var(--anim-normal) cubic-bezier(0.2, 0, 0, 1);
 	}
 
 	.summary-card:hover {
-		transform: translateY(-2px);
-		box-shadow: var(--md-elevation-2);
+		transform: translateY(-3px);
+		box-shadow: var(--md-elevation-3);
 	}
 
-	.summary-header {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-	}
-
-	.summary-icon {
-		width: 36px;
-		height: 36px;
-		border-radius: 10px;
-		background: var(--accent-bg);
-		color: var(--accent);
-		box-shadow: 0 0 0 4px var(--accent-glow);
-		display: flex;
-		align-items: center;
-		justify-content: center;
+	.accent-bar {
+		height: 3px;
+		background: var(--card-accent);
 		flex-shrink: 0;
-		transition: box-shadow var(--anim-normal) ease;
 	}
 
-	.summary-card:hover .summary-icon {
-		box-shadow: 0 0 0 7px var(--accent-glow);
+	.card-body {
+		padding: 18px 20px 20px;
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
 	}
 
-	.summary-title {
-		font-size: 0.8125rem;
+	.card-top {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+	}
+
+	.card-label {
+		font-size: 0.75rem;
 		color: var(--md-on-surface-variant);
 		font-weight: 500;
 		line-height: 1.3;
 	}
 
-	.summary-value {
+	.card-icon {
+		width: 32px;
+		height: 32px;
+		border-radius: 8px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		transition: transform var(--anim-fast) ease;
+	}
+
+	.summary-card:hover .card-icon {
+		transform: scale(1.08);
+	}
+
+	.card-value {
 		font-size: 1.5rem;
 		font-weight: 700;
-		color: var(--md-on-surface);
 		letter-spacing: -0.03em;
 		line-height: 1.2;
 	}
 
-	.summary-delta {
-		font-size: 0.75rem;
+	.card-delta {
+		font-size: 0.6875rem;
 		font-weight: 500;
+		color: var(--md-on-surface-variant);
 		line-height: 1;
 	}
 
 	@media (min-width: 1024px) {
-		.summary-value {
+		.card-value {
 			font-size: 1.625rem;
 		}
 	}

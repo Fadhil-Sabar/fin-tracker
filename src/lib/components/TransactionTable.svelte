@@ -43,7 +43,7 @@
 
 	{#if transactions.length === 0}
 		<div class="empty-state">
-			<svg width="44" height="44" viewBox="0 0 24 24" fill="#DADCE0">
+			<svg width="44" height="44" viewBox="0 0 24 24" fill="#CEC3B6">
 				<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
 			</svg>
 			<p>Belum ada transaksi</p>
@@ -65,7 +65,7 @@
 							tabindex="0"
 							class="amount-col"
 						>
-							Jumlah{sortIcon('amount')}
+							Nominal{sortIcon('amount')}
 						</th>
 					</tr>
 				</thead>
@@ -75,7 +75,7 @@
 							<td class="date-cell" data-label="Tanggal">{formatDateShort(txn.date)}</td>
 							<td data-label="Kategori">
 								<span
-									class="category-badge"
+									class="cat-tag"
 									class:expense={txn.type === 'expense'}
 									class:income={txn.type === 'income'}
 								>
@@ -89,9 +89,9 @@
 								class="amount-cell tabular-nums"
 								class:expense={txn.type === 'expense'}
 								class:income={txn.type === 'income'}
-								data-label="Jumlah"
+								data-label="Nominal"
 							>
-								{txn.type === 'expense' ? '−' : '+'}{formatCurrency(txn.amount)}
+								{txn.type === 'expense' ? '' : '+'}{formatCurrency(txn.amount)}
 							</td>
 						</tr>
 					{/each}
@@ -173,11 +173,11 @@
 	}
 
 	.transaction-table tbody tr:hover {
-		background: var(--md-surface-container);
+		background: var(--md-surface-container-low);
 	}
 
 	.date-cell {
-		color: var(--md-on-surface);
+		color: var(--md-on-surface-variant);
 		font-weight: 500;
 		white-space: nowrap;
 	}
@@ -201,7 +201,7 @@
 
 	.amount-col { text-align: right; }
 
-	.category-badge {
+	.cat-tag {
 		display: inline-block;
 		padding: 3px 9px;
 		border-radius: var(--md-shape-full);
@@ -210,12 +210,12 @@
 		text-transform: capitalize;
 	}
 
-	.category-badge.expense {
+	.cat-tag.expense {
 		background: var(--md-error-container);
-		color: var(--md-error);
+		color: var(--md-on-error-container);
 	}
 
-	.category-badge.income {
+	.cat-tag.income {
 		background: var(--md-secondary-container);
 		color: var(--md-on-secondary-container);
 	}
@@ -278,7 +278,6 @@
 			font-size: 0.875rem;
 		}
 
-		/* Map td to grid areas by data-label */
 		.transaction-table td[data-label="Tanggal"] {
 			grid-area: date;
 			font-size: 0.75rem;
@@ -290,7 +289,7 @@
 			grid-area: category;
 		}
 
-		.transaction-table td[data-label="Jumlah"] {
+		.transaction-table td[data-label="Nominal"] {
 			grid-area: amount;
 			text-align: right;
 			align-self: center;

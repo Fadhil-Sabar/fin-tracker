@@ -26,7 +26,7 @@
 	<div class="nav-brand">
 		<div class="brand-logo">
 			<svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-				<path d="M19.83 7.5l-2.27-2.27c.07-.42.18-.81.32-1.15.23-.56.56-1.06.97-1.5-.7-.37-1.5-.58-2.35-.58-1.64 0-3.09.79-4 2h-5C4.46 4 2 6.46 2 9.5S4.5 21 4.5 21H10v-2h2v2h5.5l1.68-5.59 2.82-.94V7.5h-2.17z"/>
+				<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 16v-4h-4l5-8v4h4l-5 8z"/>
 			</svg>
 		</div>
 		<span class="nav-brand-text">FinTrack</span>
@@ -102,12 +102,17 @@
 	.brand-logo {
 		width: 40px;
 		height: 40px;
-		background: var(--md-primary);
+		background: linear-gradient(135deg, var(--md-primary), var(--md-tertiary));
 		border-radius: var(--md-shape-medium);
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+		box-shadow: 0 2px 12px rgba(181,101,60,0.30);
+		transition: transform var(--anim-normal);
+	}
+
+	.brand-logo:hover {
+		transform: scale(1.08) rotate(-3deg);
 	}
 
 	.nav-brand-text {
@@ -171,7 +176,7 @@
 
 	.nav-item.active .nav-indicator {
 		background: var(--md-primary-container);
-		transform: scale(1.05);
+		box-shadow: 0 2px 8px rgba(181,101,60,0.20);
 	}
 
 	.nav-label {
@@ -238,7 +243,7 @@
 
 	.bottom-item.active .bottom-indicator {
 		background: var(--md-primary-container);
-		transform: scale(1.05);
+		box-shadow: 0 2px 8px rgba(181,101,60,0.20);
 	}
 
 	.bottom-label {

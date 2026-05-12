@@ -26,13 +26,15 @@
 		const ctx2d = canvas.getContext('2d')!;
 		const h = canvas.parentElement?.clientHeight || 280;
 
+		// Sage green gradient for income
 		const incomeGrad = ctx2d.createLinearGradient(0, 0, 0, h);
-		incomeGrad.addColorStop(0, 'rgba(52, 168, 83, 0.92)');
-		incomeGrad.addColorStop(1, 'rgba(52, 168, 83, 0.52)');
+		incomeGrad.addColorStop(0, 'rgba(107, 143, 78, 0.92)');
+		incomeGrad.addColorStop(1, 'rgba(107, 143, 78, 0.52)');
 
+		// Brick red gradient for expense
 		const expenseGrad = ctx2d.createLinearGradient(0, 0, 0, h);
-		expenseGrad.addColorStop(0, 'rgba(234, 67, 53, 0.92)');
-		expenseGrad.addColorStop(1, 'rgba(234, 67, 53, 0.52)');
+		expenseGrad.addColorStop(0, 'rgba(195, 59, 42, 0.92)');
+		expenseGrad.addColorStop(1, 'rgba(195, 59, 42, 0.52)');
 
 		const labels  = data.map((d) => getMonthLabel(d.month));
 		const incomes  = data.map((d) => d.income);
@@ -73,19 +75,19 @@
 						border: { display: false },
 						ticks: {
 							font: { family: 'DM Sans', size: 11 },
-							color: '#5F6368'
+							color: '#716257'
 						}
 					},
 					y: {
 						beginAtZero: true,
 						grid: {
-							color: '#F1F3F4',
+							color: '#DDD4C7',
 							lineWidth: 1
 						},
 						border: { display: false, dash: [4, 4] },
 						ticks: {
 							font: { family: 'DM Sans', size: 11 },
-							color: '#5F6368',
+							color: '#716257',
 							maxTicksLimit: 5,
 							callback(value) {
 								const val = value as number;
@@ -104,7 +106,7 @@
 							usePointStyle: true,
 							pointStyleWidth: 8,
 							font: { family: 'DM Sans', size: 12 },
-							color: '#5F6368'
+							color: '#716257'
 						}
 					},
 					tooltip: {
@@ -149,7 +151,7 @@
 	<div class="chart-wrapper">
 		{#if data.length === 0}
 			<div class="empty-state">
-				<svg width="44" height="44" viewBox="0 0 24 24" fill="#DADCE0">
+				<svg width="44" height="44" viewBox="0 0 24 24" fill="#CEC3B6">
 					<path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
 				</svg>
 				<p>Belum ada data tren</p>

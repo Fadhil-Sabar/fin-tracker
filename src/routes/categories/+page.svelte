@@ -15,11 +15,11 @@
 	const now = new Date();
 	const currentMonthLabel = `${getMonthName(now.getMonth())} ${now.getFullYear()}`;
 
-	// Category colors
+	// Earth tone category colors
 	const CAT_COLORS = [
-		'#1A73E8', '#34A853', '#EA4335', '#FBBC04',
-		'#0891A3', '#7C4DFF', '#FF6D01', '#C5221F',
-		'#185ABC', '#137333', '#E37400', '#9334E6'
+		'#B5653C', '#6B8F4E', '#C33B2A', '#C08050',
+		'#D4B096', '#A3C48A', '#D98A6F', '#E6C39A',
+		'#8F735F', '#7CA86E', '#BF553E', '#B3927A'
 	];
 </script>
 
@@ -42,7 +42,7 @@
 		</div>
 	{:else if categories.length === 0}
 		<div class="empty-state">
-			<svg width="64" height="64" viewBox="0 0 24 24" fill="#DADCE0">
+			<svg width="64" height="64" viewBox="0 0 24 24" fill="#CEC3B6">
 				<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
 			</svg>
 			<h3>Belum Ada Pengeluaran</h3>
@@ -75,7 +75,7 @@
 		</div>
 
 		<!-- Total summary -->
-		<div class="total-section md-card">
+		<div class="total-section">
 			<div class="total-label">Total Pengeluaran</div>
 			<div class="total-amount tabular-nums">{formatCurrency(totalExpense)}</div>
 		</div>
@@ -164,10 +164,11 @@
 	}
 	.total-section {
 		padding: 20px;
+		border-radius: var(--md-shape-medium);
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		background: var(--md-primary);
+		background: linear-gradient(135deg, var(--md-primary), var(--md-tertiary));
 		color: white;
 	}
 	.total-label {
