@@ -139,7 +139,10 @@
 </script>
 
 <div class="chart-section">
-	<h3 class="chart-title">{title}</h3>
+	<h3 class="chart-title">
+		<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color:var(--md-primary)"><path d="M11 2v20c-5.07-.5-9-4.79-9-10s3.93-9.5 9-10zm2 0v9h9c-.5-4.79-4.22-8.5-9-9zm0 11v9c4.78-.5 8.5-4.21 9-9h-9z"/></svg>
+		{title}
+	</h3>
 	<div class="chart-wrapper">
 		{#if data.length === 0}
 			<div class="empty-state">
@@ -159,7 +162,7 @@
 		background: var(--md-surface);
 		border-radius: var(--md-shape-medium);
 		box-shadow: var(--md-elevation-1);
-		padding: 20px;
+		padding: 22px;
 		animation: chart-enter var(--anim-slow) cubic-bezier(0.2, 0, 0, 1) both;
 	}
 
@@ -169,22 +172,25 @@
 	}
 
 	.chart-title {
-		font-size: 0.9375rem;
+		font-size: 0.875rem;
 		font-weight: 600;
 		color: var(--md-on-surface);
 		margin: 0 0 16px;
+		display: flex;
+		align-items: center;
+		gap: 8px;
 		letter-spacing: -0.01em;
 	}
 
 	.chart-wrapper {
-		height: 280px;
+		height: 250px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
 
 	canvas {
-		max-height: 260px;
+		max-height: 230px;
 	}
 
 	.empty-state {

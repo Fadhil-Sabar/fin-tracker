@@ -38,7 +38,10 @@
 
 <div class="table-section">
 	<div class="table-header">
-		<h3 class="table-title">Transaksi Terbaru</h3>
+		<h3 class="table-title">
+			<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color:var(--md-on-surface-variant)"><path d="M18 17H6v-2h12v2zm0-4H6v-2h12v2zm0-4H6V7h12v2zM3 22l1.5-1.5L6 22l1.5-1.5L9 22l1.5-1.5L12 22l1.5-1.5L15 22l1.5-1.5L18 22l1.5-1.5L21 22V2l-1.5 1.5L18 2l-1.5 1.5L15 2l-1.5 1.5L12 2l-1.5 1.5L9 2 7.5 3.5 6 2 4.5 3.5 3 2v20z"/></svg>
+			Transaksi Terbaru
+		</h3>
 	</div>
 
 	{#if transactions.length === 0}
@@ -106,7 +109,7 @@
 		background: var(--md-surface);
 		border-radius: var(--md-shape-medium);
 		box-shadow: var(--md-elevation-1);
-		padding: 20px;
+		padding: 22px;
 	}
 
 	.table-header {
@@ -114,10 +117,13 @@
 	}
 
 	.table-title {
-		font-size: 0.9375rem;
+		font-size: 0.875rem;
 		font-weight: 600;
 		color: var(--md-on-surface);
 		margin: 0;
+		display: flex;
+		align-items: center;
+		gap: 8px;
 		letter-spacing: -0.01em;
 	}
 
@@ -135,13 +141,13 @@
 
 	.transaction-table th {
 		text-align: left;
-		padding: 10px 12px;
+		padding: 10px 8px;
 		font-weight: 600;
 		color: var(--md-on-surface-variant);
 		font-size: 0.6875rem;
 		text-transform: uppercase;
 		letter-spacing: 0.06em;
-		border-bottom: 1px solid var(--md-outline);
+		border-bottom: 1.5px solid var(--md-outline-variant);
 		cursor: pointer;
 		user-select: none;
 		white-space: nowrap;
@@ -153,7 +159,7 @@
 	}
 
 	.transaction-table td {
-		padding: 12px;
+		padding: 11px 8px;
 		border-bottom: 1px solid var(--md-outline-variant);
 		vertical-align: middle;
 	}

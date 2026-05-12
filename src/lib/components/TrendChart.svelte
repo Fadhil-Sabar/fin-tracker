@@ -147,7 +147,10 @@
 </script>
 
 <div class="chart-section">
-	<h3 class="chart-title">{title}</h3>
+	<h3 class="chart-title">
+		<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color:var(--md-secondary)"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
+		{title}
+	</h3>
 	<div class="chart-wrapper">
 		{#if data.length === 0}
 			<div class="empty-state">
@@ -167,7 +170,7 @@
 		background: var(--md-surface);
 		border-radius: var(--md-shape-medium);
 		box-shadow: var(--md-elevation-1);
-		padding: 20px;
+		padding: 22px;
 		animation: chart-enter var(--anim-slow) cubic-bezier(0.2, 0, 0, 1) both;
 		animation-delay: 80ms;
 	}
@@ -178,22 +181,25 @@
 	}
 
 	.chart-title {
-		font-size: 0.9375rem;
+		font-size: 0.875rem;
 		font-weight: 600;
 		color: var(--md-on-surface);
 		margin: 0 0 16px;
+		display: flex;
+		align-items: center;
+		gap: 8px;
 		letter-spacing: -0.01em;
 	}
 
 	.chart-wrapper {
-		height: 280px;
+		height: 250px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
 
 	canvas {
-		max-height: 260px;
+		max-height: 230px;
 	}
 
 	.empty-state {
